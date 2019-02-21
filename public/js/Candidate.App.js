@@ -1,25 +1,41 @@
 const app = angular.module("Candidate.App", []);
 
 app.component("itmRoot", {
-    controller: class newCandidate{
+    controller: class {
         constructor() {
             this.candidates = [{ name: "Puppies", votes: 10 }, { name: "Kittens", votes: 12 }, { name: "Gerbils", votes: 7 }];
         }
 
         onVote(candidate) {
             console.log(`Vote for ${candidate.name}`);
+            // adding 1 vote to the candidate that was clicked on
             candidate.votes++;
             console.log(candidate.votes);
         }
 
         onAddCandidate(candidate) {
-            console.log(`Added candidate ${candidate.name}`);
-            this.candidates.push({...candidate, votes: 0});
-            console.log(this.candidates);
+            // Checking to see if the field is empty
+            if(candidate.name === undefined || candidate.name === "") {
+                alert("Please enter a name for the candidate!");
+            } else {
+                console.log(`Added candidate ${candidate.name}`);
+                // adding a new key-value pair for votes, and pushing the new candidate into the array.
+                this.candidates.push({...candidate, votes: 0});
+                console.log(this.candidates);
+            }
         }
 
         onRemoveCandidate(candidate) {
             console.log(`Removed candidate ${candidate.name}`);
+            // looping through the candidates array
+            for(let i in this.candidates) {
+                // if the candidate that was clicked on matches a candidate in the array
+                if(candidate === this.candidates[i]) {
+                    // remove that specific candidate from the array
+                    this.candidates.splice(i, 1);
+                }
+            }
+                console.log(this.candidates);
         }
     },
     template: `
