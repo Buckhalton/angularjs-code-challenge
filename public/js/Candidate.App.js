@@ -1,7 +1,7 @@
 const app = angular.module("Candidate.App", []);
 
 app.component("itmRoot", {
-    controller: class {
+    controller: class newCandidate{
         constructor() {
             this.candidates = [{ name: "Puppies", votes: 10 }, { name: "Kittens", votes: 12 }, { name: "Gerbils", votes: 7 }];
         }
@@ -14,7 +14,8 @@ app.component("itmRoot", {
 
         onAddCandidate(candidate) {
             console.log(`Added candidate ${candidate.name}`);
-            this.candidates.push(candidate);
+            this.candidates.push({...candidate, votes: 0});
+            console.log(this.candidates);
         }
 
         onRemoveCandidate(candidate) {
@@ -50,7 +51,7 @@ app.component("itmManagement", {
     controller: class {
         constructor() {
             this.newCandidate = {
-                name: ""
+                name: "",
             };
         }
 
