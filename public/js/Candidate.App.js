@@ -1,8 +1,11 @@
 const app = angular.module("Candidate.App", []);
+// Declaring the total amount of votes globally
+let totalVotes = 0;
+
 app.component("itmRoot", {
     controller: class {
         constructor() {
-            this.candidates = [{ name: "Puppies", votes: 10 }, { name: "Kittens", votes: 12 }, { name: "Gerbils", votes: 7 }];
+            this.candidates = [{ name: "Puppies", votes: 0, percentage: 0 }, { name: "Kittens", votes: 0, percentage: 0 }, { name: "Gerbils", votes: 0, percentage: 0 }];
             this.sortCandidates();
         }
 
@@ -13,11 +16,23 @@ app.component("itmRoot", {
             console.log('After sort', this.candidates);
         } // end sortCandidates
 
+        calculatePercentage() {
+            // For each candidate in the array, calculate the percentage
+            this.candidates.forEach((candidate) => {
+                candidate.percentage = (candidate.votes / totalVotes * 100).toFixed(2) + '%';
+            })
+        } // end calculatePercentage
+
         onVote(candidate) {
             console.log(`Vote for ${candidate.name}, votes: ${candidate.votes}`);
             // adding 1 vote to the candidate that was clicked on
             candidate.votes++;
+            // Sorting the candidates after adding the new vote
             this.sortCandidates();
+            // Increasing the total amount of votes
+            totalVotes++;
+            // Calculate the new percentages
+            this.calculatePercentage();
         } // end onVote
 
         // This method checks to see if a candidate has already been added.
@@ -30,7 +45,7 @@ app.component("itmRoot", {
                     return true;
                 } 
             } // end for in loop
-            //otherwise return false
+            //Otherwise return false
             return false;
         } // end candidateCheck
 
@@ -44,20 +59,24 @@ app.component("itmRoot", {
             // Else, if the field isn't empty, and the candidate doesn't exist, push the new candidate into the array.
             } else {
                 console.log(`Added candidate ${candidate.name}`);
-                // using the spread syntax to add a new key-value pair for votes, and pushing the new candidate into the array.
-                this.candidates.push(candidate);
+                // Using the spread syntax to add a new key-value pair for votes, and pushing the new candidate into the array.
+                this.candidates.push({...candidate});
                 console.log(this.candidates);
             }
         }// End onAddCandidate
 
         onRemoveCandidate(candidate) {
             console.log(`Removed candidate ${candidate.name}`);
-            // looping through the candidates array
+            // Looping through the candidates array
             for(let i in this.candidates) {
-                // if the candidate that was clicked on matches a candidate in the array
+                // If the candidate that was clicked on matches a candidate in the array
                 if(candidate === this.candidates[i]) {
-                    // remove that specific candidate from the array
+                    // Remove that specific candidate from the array
                     this.candidates.splice(i, 1);
+                    // Remove that candidates votes from the total amount of votes
+                    totalVotes = totalVotes - candidate.votes;
+                    // Calculate the new percentage
+                    this.calculatePercentage();
                 }
             }
             console.log(this.candidates);
@@ -94,6 +113,7 @@ app.component("itmManagement", {
             this.newCandidate = {
                 name: "",
                 votes: 0,
+                percentage: 0,
             };
         }
 
@@ -156,6 +176,7 @@ app.component("itmResults", {
             <li ng-repeat="candidate in $ctrl.candidates">
                 <span ng-bind="candidate.name"></span>
                 <strong ng-bind="candidate.votes"></strong>
+                <strong ng-bind="candidate.percentage"></strong>
             </li>
         </ul>
     `
