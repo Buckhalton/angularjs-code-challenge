@@ -3,17 +3,26 @@ app.component("itmRoot", {
     controller: class {
         constructor() {
             this.candidates = [{ name: "Puppies", votes: 10 }, { name: "Kittens", votes: 12 }, { name: "Gerbils", votes: 7 }];
+            this.sortCandidates();
         }
+
+        // This method sorts the candidates in order by votes, descending.
+        sortCandidates() {
+            console.log('Before sort', this.candidates)
+            this.candidates.sort((a, b) => b.votes - a.votes);
+            console.log('After sort', this.candidates);
+        } // end sortCandidates
 
         onVote(candidate) {
             console.log(`Vote for ${candidate.name}, votes: ${candidate.votes}`);
             // adding 1 vote to the candidate that was clicked on
             candidate.votes++;
+            this.sortCandidates();
         } // end onVote
 
+        // This method checks to see if a candidate has already been added.
+        // I moved this outside of onAddCandidate, as it improves readability.
         candidateCheck(candidate) {
-            //This method checks to see if a candidate has already been added.
-            //I moved this outside of onAddCandidate, as it improved readability.
             //Looping through the candidates array
             for(let i in this.candidates) {
                  //if the candidate exists, return true
