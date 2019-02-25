@@ -19,19 +19,20 @@ app.component("itmRoot", {
         calculatePercentage() {
             // For each candidate in the array, calculate the percentage
             this.candidates.forEach((candidate) => {
+                // Dividing each candidate's votes by the total amount of votes, and then multiplying by 100 for the percentage. 
                 candidate.percentage = (candidate.votes / totalVotes * 100).toFixed(2) + '%';
             })
         } // end calculatePercentage
 
         onVote(candidate) {
-            console.log(`Vote for ${candidate.name}, votes: ${candidate.votes}`);
-            // adding 1 vote to the candidate that was clicked on
+            // Adding 1 vote to the candidate that was clicked on
             candidate.votes++;
+            console.log(`Vote for ${candidate.name}, votes: ${candidate.votes}`);
             // Sorting the candidates after adding the new vote
             this.sortCandidates();
             // Increasing the total amount of votes
             totalVotes++;
-            // Calculate the new percentages
+            // Calculating the new percentages
             this.calculatePercentage();
         } // end onVote
 
@@ -73,7 +74,7 @@ app.component("itmRoot", {
                 if(candidate === this.candidates[i]) {
                     // Remove that specific candidate from the array
                     this.candidates.splice(i, 1);
-                    // Remove that candidates votes from the total amount of votes
+                    // Subtract that candidates votes from the total amount of votes
                     totalVotes = totalVotes - candidate.votes;
                     // Calculate the new percentage
                     this.calculatePercentage();
@@ -119,11 +120,16 @@ app.component("itmManagement", {
 
         submitCandidate(candidate) {
             this.onAdd({ $candidate: candidate });
-        }
+            // Clearing the input after submitting the new candidate.
+            this.newCandidate = {
+                ...this.newCandidate,
+                name: "",
+            };
+        } // end submitCandidate
 
         removeCandidate(candidate) {
             this.onRemove({ $candidate: candidate });
-        }
+        } // end removeCandidate
     },
     template: `
         <h2>Manage Candidates</h2>
