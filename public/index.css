@@ -33,13 +33,23 @@ input {
 
 .jumbotron {
     background-color: #a7dfd4;
-    margin-top: 2vmax;
+    margin-top: 15px;
     box-shadow: 2px 10px 29px 0px rgba(0,0,0,0.18);
 }
 
 .new-candidate {
     flex-direction: row-reverse;
     justify-content: space-evenly;
+}
+
+.percentageContainer {
+    width: 60%;
+    background-color: transparent;
+    border: 1px solid lightgrey;
+}
+
+.percentage {
+    margin: 0 auto;
 }
 
 .small-container {
@@ -51,6 +61,16 @@ input {
     background-color: #a7dfd4;
 }
 
+.votePercentage {
+    width: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 2rem;
+    background-color: #a7dfd4;
+    transition: 1.3s ease-in;
+}
+
 .vote-results {
     display: flex;
     flex-direction: row;
@@ -58,8 +78,9 @@ input {
     background-color: #e9fffe;
     width: 100%;
     margin: 0 auto;
+    position: relative;
 }
 
-.vote-results:hover {
+.vote-results:hover, .percentageContainer:hover {
     background-color: #d8eceb;
 }

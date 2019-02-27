@@ -5,25 +5,23 @@ let totalVotes = 0;
 app.component("itmRoot", {
     controller: class {
         constructor() {
-            this.candidates = [{ name: "Puppies", votes: 0, percentage: 0 }, { name: "Kittens", votes: 0, percentage: 0 }, { name: "Gerbils", votes: 0, percentage: 0 }];
-            this.sortCandidates();
+            this.candidates = [{ name: "Puppies", votes: 0, percentage: 0.00 }, { name: "Kittens", votes: 0, percentage: 0.00 }, { name: "Gerbils", votes: 0, percentage: 0.00 }];
+            this.calculatePercentage();
         }
 
         // This method sorts the candidates in order by votes, descending.
         sortCandidates() {
-            console.log('Before sort', this.candidates)
             this.candidates.sort((a, b) => b.votes - a.votes);
-            console.log('After sort', this.candidates);
         } // end sortCandidates
 
         calculatePercentage() {
             // For each candidate in the array, calculate the percentage
             this.candidates.forEach((candidate) => {
-                if (candidate.votes != 0) {
+                if (candidate.votes != 0.00) {
                     // Dividing each candidate's votes by the total amount of votes, and then multiplying by 100 for the percentage. 
                     candidate.percentage = (candidate.votes / totalVotes * 100).toFixed(2) + '%';
                 } else {
-                    candidate.percentage = "0%";
+                    candidate.percentage = "0.00%";
                 }
             }) // end forEach
         } // end calculatePercentage
@@ -31,7 +29,6 @@ app.component("itmRoot", {
         onVote(candidate) {
             // Adding 1 vote to the candidate that was clicked on
             candidate.votes++;
-            console.log(`Vote for ${candidate.name}, votes: ${candidate.votes}`);
             // Sorting the candidates after adding the new vote
             this.sortCandidates();
             // Increasing the total amount of votes
@@ -63,15 +60,13 @@ app.component("itmRoot", {
                 alert('That candidate already exists!');
                 // Else, if the field isn't empty, and the candidate doesn't exist, push the new candidate into the array.
             } else {
-                console.log(`Added candidate ${candidate.name}`);
                 // Using the spread syntax to add a new key-value pair for votes, and pushing the new candidate into the array.
                 this.candidates.push({ ...candidate });
-                console.log(this.candidates);
+                this.calculatePercentage();
             }
         }// End onAddCandidate
 
         onRemoveCandidate(candidate) {
-            console.log(`Removed candidate ${candidate.name}`);
             // Looping through the candidates array
             for (let i in this.candidates) {
                 // If the candidate that was clicked on matches a candidate in the array
@@ -84,7 +79,6 @@ app.component("itmRoot", {
                     this.calculatePercentage();
                 }
             }
-            console.log(this.candidates);
         } // end onRemoveCandidate
     },
     template: `
@@ -118,7 +112,7 @@ app.component("itmManagement", {
             this.newCandidate = {
                 name: "",
                 votes: 0,
-                percentage: 0,
+                percentage: 0.00,
             };
         }
 
@@ -184,16 +178,19 @@ app.component("itmResults", {
     bindings: {
         candidates: "<",
     },
-
-    controller: class { },
+    controller: class {},
     template: `
         <div class="small-container">
             <h2>Live Results</h2>
             <ul class="list-group">
                 <li class="list-group-item vote-results" ng-repeat="candidate in $ctrl.candidates">
-                    <span ng-bind="candidate.name"></span>
+                    <span class="candidate-name" ng-bind="candidate.name"></span>
                     <strong ng-bind="candidate.votes"></strong>
-                    <strong ng-bind="candidate.percentage"></strong>
+                    <div class="percentageContainer">
+                        <div class="votePercentage" ng-style="{'width':candidate.percentage}">
+                            <strong class="percentage" ng-bind="candidate.percentage"></strong>
+                        </div>
+                    </div>
                 </li>
             </ul>
         <div>
